@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        .register-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .register-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        .btn-register {
+            font-weight: 600;
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-register:hover {
+            background-color: #218838;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h2 class="register-title">Đăng ký tài khoản</h2>
+            
+            <div class="alert alert-success" id="successAlert" style="display:none;">
+                Đăng ký thành công! <a th:href="@{/login}">Đăng nhập ngay</a>
+            </div>
+            
+            <div class="alert alert-danger" id="errorAlert" style="display:none;">
+                <span id="errorMessage"></span>
+            </div>
+            
+            <form id="registerForm">
+                <div class="text-center mb-4">
+                    <img src="/images/default-avatar.jpg" alt="Avatar" class="avatar-preview" id="avatarPreview">
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Ảnh đại diện</label>
+                        <input type="text" class="form-control" id="avatar" name="avatar" placeholder="URL hình ảnh">
+                        <div class="form-text">Nhập URL hình ảnh đại diện của bạn (hoặc để trống để sử dụng ảnh mặc định)</div>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Họ tên</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="error-message" id="usernameError"></div>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                        <div class="error-message" id="phoneError"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="address" class="form-label">Địa chỉ</label>
+                    <textarea class="form-control" id="address" name="address" rows="2" required></textarea>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="createdBy" class="form-label">Người giới thiệu (nếu có)</label>
+                    <input type="number" class="form-control" id="createdBy" name="createdBy" placeholder="ID người giới thiệu">
+                </div>
+                
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-register">Đăng ký</button>
+                </div>
+            </form>
+            
+            <div class="login-link">
+                Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Xem trước avatar khi nhập URL
+        document.getElementById('avatar').addEventListener('input', function() {
+            const avatarUrl = this.value.trim();
+            const previewImg = document.getElementById('avatarPreview');
+            if (avatarUrl) {
+                previewImg.src = avatarUrl;
+            } else {
+                previewImg.src = '/images/default-avatar.jpg';
+            }
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(function(el) {
+                el.textContent = '';
+            });
+            
+            // Validate password confirmation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Mật khẩu xác nhận không khớp';
+                return;
+            }
+            
+            // Create data object
+            const formData = {
+                name: document.getElementById('name').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                password: password,
+                avatar: document.getElementById('avatar').value,
+                createdBy: document.getElementById('createdBy').value || null
+            };
+            
+            // Submit form via AJAX
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    document.getElementById('successAlert').style.display = 'block';
+                    document.getElementById('errorAlert').style.display = 'none';
+                    document.getElementById('registerForm').reset();
+                    document.getElementById('avatarPreview').src = '/images/default-avatar.jpg';
+                } else {
+                    // Show error message
+                    document.getElementById('errorAlert').style.display = 'block';
+                    document.getElementById('errorMessage').textContent = data.message;
+                    document.getElementById('successAlert').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorAlert').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
+                document.getElementById('successAlert').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html> 
