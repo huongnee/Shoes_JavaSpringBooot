@@ -19,6 +19,8 @@ public class CategoryDTO {
     @Size(max = 500, message = "Tên danh mục không được vượt quá 500 ký tự")
     private String name;
     
+    private String description;
+    
     private String notes;
     
     private String icon;
